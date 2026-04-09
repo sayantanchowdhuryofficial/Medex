@@ -1,143 +1,171 @@
-
-
-const PASSWORD = "1234";
-
+const PASSWORD="1234"
 
 function login(){
-  const val = document.getElementById("password").value;
-
-  if(val === PASSWORD){
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").classList.remove("hidden");
-    nav("dashboard");
-  } else {
-    alert("Wrong Access Key");
-  }
+if(password.value===PASSWORD){
+login.style.display="none"
+app.classList.remove("hidden")
+nav("dashboard")
+}else alert("Wrong Access Key")
 }
 
+function nav(id){
 
-function nav(section){
+document.getElementById("title").innerText=id.toUpperCase()
 
-  document.getElementById("title").innerText = section.toUpperCase();
+;["dashboard","patients","doctors","appointments","ai"].forEach(x=>{
+document.getElementById(x).classList.add("hidden")
+})
 
-  ["dashboard","patients","ai"].forEach(id=>{
-    document.getElementById(id).classList.add("hidden");
-  });
+document.getElementById(id).classList.remove("hidden")
 
-  document.getElementById(section).classList.remove("hidden");
-
-  renderAll();
+renderAll()
 }
-
-
 
 function addPatient(){
-  const name = document.getElementById("pname").value;
-  const age = document.getElementById("page").value;
+const name=pname.value.trim()
+const age=page.value.trim()
 
-  if(!name || !age) return alert("Enter all fields");
+if(!name||!age) return alert("Fill all fields")
 
-  DB.addPatient(name, age);
+DB.addPatient(name,age)
 
-  document.getElementById("pname").value = "";
-  document.getElementById("page").value = "";
+pname.value=""
+page.value=""
 
-  renderPatients();
+renderPatients()
+renderStats()
 }
 
 function deletePatient(id){
-  DB.deletePatient(id);
-  renderPatients();
+DB.deletePatient(id)
+renderPatients()
+renderStats()
 }
-
-
 
 function renderPatients(){
-  const list = DB.getPatients();
+const list=DB.getPatients()
 
-  const container = document.getElementById("patientList");
-
-  container.innerHTML = list.map(p => `
-    <div class="card">
-      <b>${p.name}</b> (${p.age})
-      <button onclick="deletePatient(${p.id})">Delete</button>
-    </div>
-  `).join("");
+patientList.innerHTML=list.map(p=>`
+<div class="card">
+<b>${p.name}</b> (${p.age})
+<button onclick="deletePatient(${p.id})">Delete</button>
+</div>
+`).join("")
 }
 
+function addDoctor(){
+const name=dname.value.trim()
+const spec=dspec.value.trim()
 
+if(!name||!spec) return alert("Fill all fields")
 
-function renderStats(){
+DB.addDoctor(name,spec)
 
-  const patients = DB.getPatients().length;
-  const appointments = DB.getAppointments().length;
+dname.value=""
+dspec.value=""
 
-  document.getElementById("statPatients").innerText = "Patients: " + patients;
-  document.getElementById("statAppointments").innerText = "Appointments: " + appointments;
+renderDoctors()
+renderStats()
+loadDoctors()
 }
 
-let chartInstance = null;
+function renderDoctors(){
+const list=DB.getDoctors()
+
+doctorList.innerHTML=list.map(d=>`
+<div class="card">
+<b>${d.name}</b> (${d.spec})
+</div>
+`).join("")
+}
+
+function loadDoctors(){
+const list=DB.getDoctors()
+
+ap_doctor.innerHTML=list.map(d=>`
+<option>${d.name} (${d.spec})</option>
+`).join("")
+}
+
+function addAppointment(){
+const patient=ap_patient.value.trim()
+const doctor=ap_doctor.value
+
+if(!patient||!doctor) return alert("Fill all fields")
+
+DB.addAppointment(patient,doctor)
+
+ap_patient.value=""
+
+renderAppointments()
+renderStats()
+}
+
+function renderAppointments(){
+const list=DB.getAppointments()
+
+appointmentList.innerHTML=list.map(a=>`
+<div class="card">
+${a.patient} → ${a.doctor}
+</div>
+`).join("")
+}
+
+let chartInstance=null
 
 function renderChart(){
 
-  const ctx = document.getElementById("chart");
+const ctx=document.getElementById("chart")
 
-  const data = [
-    DB.getPatients().length,
-    DB.getAppointments().length
-  ];
+const stats=DB.getStats()
 
-  if(chartInstance){
-    chartInstance.destroy();
-  }
+if(chartInstance) chartInstance.destroy()
 
-  chartInstance = new Chart(ctx,{
-    type:"bar",
-    data:{
-      labels:["Patients","Appointments"],
-      datasets:[{
-        label:"System Data",
-        data:data
-      }]
-    }
-  });
+chartInstance=new Chart(ctx,{
+type:"bar",
+data:{
+labels:["Patients","Doctors","Appointments"],
+datasets:[{
+label:"System Data",
+data:[stats.patients,stats.doctors,stats.appointments]
+}]
+}
+})
 }
 
+function renderStats(){
+const stats=DB.getStats()
 
+statPatients.innerText="Patients: "+stats.patients
+statDoctors.innerText="Doctors: "+stats.doctors
+statAppointments.innerText="Appointments: "+stats.appointments
+}
 
 function askAI(){
+const q=question.value.trim()
+if(!q) return
 
-  const input = document.getElementById("question");
-  const chat = document.getElementById("chat");
+chat.innerHTML+=`
+<p>🧑 ${q}</p>
+<p>🤖 ${AI.respond(q)}</p>
+`
 
-  const q = input.value;
-
-  if(!q) return;
-
-  const res = AI.respond(q);
-
-  chat.innerHTML += `
-    <p>🧑 ${q}</p>
-    <p>🤖 ${res}</p>
-  `;
-
-  chat.scrollTop = chat.scrollHeight;
-
-  input.value = "";
+chat.scrollTop=chat.scrollHeight
+question.value=""
 }
-
-
 
 function resetSystem(){
-  if(confirm("Reset all data?")){
-    DB.reset();
-    location.reload();
-  }
+if(confirm("Reset all data?")){
+DB.reset()
+location.reload()
+}
 }
 
-
 function renderAll(){
-  renderPatients();
-  renderStats();
-  renderChart();
+renderPatients()
+renderDoctors()
+renderAppointments()
+renderStats()
+renderChart()
+loadDoctors()
 }
