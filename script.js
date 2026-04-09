@@ -1,93 +1,70 @@
 const PASSWORD="1234";
-
-// LOGIN
-function login(){
-  if(document.getElementById("pass").value===PASSWORD){
     document.getElementById("login").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
     show('dashboard');
   } else alert("Wrong Password");
 }
 
-// NAV
 function show(id){
-  ["dashboard","patients","appointments","bot"].forEach(x=>{
-    document.getElementById(x).classList.add("hidden");
-  });
+  ["dashboard","patients","bot"].forEach(x=>{
+    document.getElementById(x).classList.add("hidden")
+  })
   document.getElementById(id).classList.remove("hidden");
+  document.getElementById("title").innerText=id.toUpperCase();
   loadAll();
 }
 
-// PATIENT
 function addPatient(){
   let d=JSON.parse(localStorage.getItem("patients")||"[]");
-  d.push({
-    name:document.getElementById("pname").value,
-    age:document.getElementById("page").value
-  });
+  d.push({name:pname.value,age:page.value});
+  localStorage.setItem("patients",JSON.stringify(d));
+  loadPatients();
+}
+
+function deletePatient(i){
+  let d=JSON.parse(localStorage.getItem("patients")||"[]");
+  d.splice(i,1);
   localStorage.setItem("patients",JSON.stringify(d));
   loadPatients();
 }
 
 function loadPatients(){
   let d=JSON.parse(localStorage.getItem("patients")||"[]");
-  document.getElementById("plist").innerHTML=
-    d.map(x=>`<p>${x.name} (${x.age})</p>`).join("");
+  plist.innerHTML=d.map((x,i)=>`<div>${x.name} (${x.age}) <button onclick="deletePatient(${i})">X</button></div>`).join("");
 }
 
-// APPOINTMENT
-function addAppointment(){
-  let d=JSON.parse(localStorage.getItem("appointments")||"[]");
-  d.push({
-    p:document.getElementById("apname").value,
-    d:document.getElementById("docname").value
-  });
-  localStorage.setItem("appointments",JSON.stringify(d));
-  loadAppointments();
+function loadStats(){
+  let p=JSON.parse(localStorage.getItem("patients")||"[]").length;
+  pcount.innerText="Patients: "+p;
+  acount.innerText="Records Active";
 }
 
-function loadAppointments(){
-  let d=JSON.parse(localStorage.getItem("appointments")||"[]");
-  document.getElementById("alist").innerHTML=
-    d.map(x=>`<p>${x.p} → ${x.d}</p>`).join("");
-}
-
-// CHART
 function loadChart(){
   let ctx=document.getElementById("chart");
-  new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:['Patients','Appointments'],
-      datasets:[{
-        label:'System Data',
-        data:[
-          JSON.parse(localStorage.getItem("patients")||"[]").length,
-          JSON.parse(localStorage.getItem("appointments")||"[]").length
-        ]
-      }]
-    }
-  });
+  new Chart(ctx,{type:'bar',data:{labels:['Patients'],datasets:[{data:[JSON.parse(localStorage.getItem("patients")||"[]").length]}]}});
 }
 
-// AI BOT
 function askBot(){
   let q=document.getElementById("q").value.toLowerCase();
   let chat=document.getElementById("chat");
 
   let ans="";
 
-  if(q.includes("fever")) ans="Take rest, drink fluids, consult doctor.";
-  else if(q.includes("headache")) ans="Stay hydrated and rest.";
-  else if(q.includes("appointment")) ans="Go to appointment section.";
-  else ans="I am Medex AI. Consult doctor for serious issues.";
+  if(q.includes("fever")) ans="Possible viral. Stay hydrated.";
+  else if(q.includes("pain")) ans="Rest and consult doctor.";
+  else if(q.includes("hello")) ans="Hello, I am Medex AI.";
+  else ans="I recommend professional consultation.";
 
-  chat.innerHTML += `<p>🧑 ${q}</p><p>🤖 ${ans}</p>`;
+  chat.innerHTML+=`<p>🧑 ${q}</p><p>🤖 ${ans}</p>`;
 }
 
-// LOAD
+function clearData(){
+  localStorage.clear();
+  location.reload();
+}
+
 function loadAll(){
   loadPatients();
-  loadAppointments();
+  loadStats();
   loadChart();
 }
