@@ -1,67 +1,73 @@
+const AI={
 
+respond(input){
 
-const AI = {
+const q=input.toLowerCase().trim()
 
-  respond(input){
+if(!q) return "Ask something."
 
-    const q = input.toLowerCase();
+if(this.match(q,["hi","hello","hey"]))
+return "Hello 👋 I am Medex AI. Ask me about patients, doctors, or health."
 
-    
-    if(this.match(q, ["hello","hi","hey"])) 
-      return "Hello 👋 I am Medex AI. How can I help you?";
+if(this.match(q,["who are you","what are you"]))
+return "I am Medex AI assistant designed to help manage healthcare data."
 
-    if(this.match(q, ["fever","temperature"]))
-      return "Fever detected 🤒. Stay hydrated, take rest, and consult a doctor if it persists.";
+if(this.match(q,["help"]))
+return "You can ask about patients, doctors, appointments, or symptoms."
 
-    if(this.match(q, ["headache","migraine"]))
-      return "Headache may be due to stress or dehydration. Drink water and rest.";
+if(this.match(q,["how many patients","patient count"]))
+return "Total patients: "+DB.getPatients().length
 
-    if(this.match(q, ["covid","corona"]))
-      return "If symptoms match COVID-19, please isolate and take a medical test.";
+if(this.match(q,["how many doctors","doctor count"]))
+return "Total doctors: "+DB.getDoctors().length
 
-    if(this.match(q, ["appointment","book"]))
-      return "To book an appointment, go to the Appointments section.";
+if(this.match(q,["appointments","appointment count"]))
+return "Total appointments: "+DB.getAppointments().length
 
-    if(this.match(q, ["patient","list"]))
-      return this.patientSummary();
+if(this.match(q,["list patients","show patients"]))
+return this.listPatients()
 
-    if(this.match(q, ["help","what can you do"]))
-      return "I can help with symptoms, patient data, and system guidance.";
+if(this.match(q,["list doctors","show doctors"]))
+return this.listDoctors()
 
-    
-    if(q.includes("how many patients")){
-      return `There are currently ${DB.getPatients().length} patients in the system.`;
-    }
+if(this.match(q,["latest activity","logs"]))
+return this.logs()
 
-   
-    return this.smartFallback(q);
-  },
+if(this.match(q,["fever","temperature"]))
+return "Fever may indicate infection. Stay hydrated and consult doctor if needed."
 
- 
-  match(q, keywords){
-    return keywords.some(word => q.includes(word));
-  },
+if(this.match(q,["headache","migraine"]))
+return "Headache may be due to stress or dehydration. Take rest."
 
-  
-  patientSummary(){
-    const patients = DB.getPatients();
+if(this.match(q,["cold","cough"]))
+return "Cold/cough common. If persistent, consult doctor."
 
-    if(patients.length === 0) return "No patients found.";
+if(q.includes("?"))
+return "That’s a complex query. For accuracy, consult a medical professional."
 
-    return patients.slice(0,5)
-      .map(p => `${p.name} (${p.age})`)
-      .join(", ");
-  },
+return "Try asking about patients, doctors, appointments or symptoms."
+},
 
- 
-  smartFallback(q){
+match(q,arr){
+return arr.some(w=>q.includes(w))
+},
 
-    if(q.length < 3) return "Please ask something meaningful.";
+listPatients(){
+const p=DB.getPatients()
+if(p.length===0) return "No patients available."
+return p.slice(0,5).map(x=>x.name+"("+x.age+")").join(", ")
+},
 
-    if(q.includes("?"))
-      return "That's an interesting question. I recommend consulting a doctor for accurate advice.";
+listDoctors(){
+const d=DB.getDoctors()
+if(d.length===0) return "No doctors available."
+return d.map(x=>x.name+"("+x.spec+")").join(", ")
+},
 
-    return "I am still learning 🤖. Try asking about symptoms, patients, or appointments.";
-  }
+logs(){
+const logs=DB.getLogs()
+if(logs.length===0) return "No activity yet."
+return logs.map(l=>l.msg).join(" | ")
+}
 
-};
+}
