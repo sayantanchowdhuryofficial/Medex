@@ -1,88 +1,115 @@
+const DB={
 
+init(){
+if(!localStorage.getItem("medex_db")){
+localStorage.setItem("medex_db",JSON.stringify({
+patients:[],
+doctors:[],
+appointments:[],
+logs:[]
+}))
+}
+},
 
-const DB = {
+get(){
+return JSON.parse(localStorage.getItem("medex_db"))
+},
 
+set(data){
+localStorage.setItem("medex_db",JSON.stringify(data))
+},
 
-  init(){
-    if(!localStorage.getItem("medex_db")){
-      const base = {
-        patients: [],
-        appointments: [],
-        logs: []
-      };
-      localStorage.setItem("medex_db", JSON.stringify(base));
-    }
-  },
+uid(){
+return Date.now()+Math.floor(Math.random()*1000)
+},
 
+log(msg){
+const db=this.get()
+db.logs.push({
+time:new Date().toLocaleString(),
+msg
+})
+this.set(db)
+},
 
-  get(){
-    return JSON.parse(localStorage.getItem("medex_db"));
-  },
+addPatient(name,age){
+const db=this.get()
 
- 
-  set(data){
-    localStorage.setItem("medex_db", JSON.stringify(data));
-  },
+db.patients.push({
+id:this.uid(),
+name,
+age,
+created:new Date().toLocaleString()
+})
 
+this.log("Patient added: "+name)
+this.set(db)
+},
 
-  addPatient(name, age){
-    const db = this.get();
+deletePatient(id){
+const db=this.get()
+db.patients=db.patients.filter(p=>p.id!==id)
+this.log("Patient deleted")
+this.set(db)
+},
 
-    const patient = {
-      id: Date.now(),
-      name,
-      age,
-      created: new Date().toLocaleString()
-    };
+addDoctor(name,spec){
+const db=this.get()
 
-    db.patients.push(patient);
-    db.logs.push(`Patient added: ${name}`);
+db.doctors.push({
+id:this.uid(),
+name,
+spec
+})
 
-    this.set(db);
-  },
+this.log("Doctor added: "+name)
+this.set(db)
+},
 
- 
-  deletePatient(id){
-    const db = this.get();
+getDoctors(){
+return this.get().doctors
+},
 
-    db.patients = db.patients.filter(p => p.id !== id);
-    db.logs.push(`Patient deleted`);
+addAppointment(patient,doctor){
+const db=this.get()
 
-    this.set(db);
-  },
+db.appointments.push({
+id:this.uid(),
+patient,
+doctor,
+time:new Date().toLocaleString()
+})
 
+this.log("Appointment: "+patient+" → "+doctor)
+this.set(db)
+},
 
-  getPatients(){
-    return this.get().patients;
-  },
+getAppointments(){
+return this.get().appointments
+},
 
-  
-  addAppointment(patient, doctor){
-    const db = this.get();
+getPatients(){
+return this.get().patients
+},
 
-    db.appointments.push({
-      id: Date.now(),
-      patient,
-      doctor,
-      time: new Date().toLocaleString()
-    });
+getStats(){
+const db=this.get()
+return{
+patients:db.patients.length,
+doctors:db.doctors.length,
+appointments:db.appointments.length
+}
+},
 
-    db.logs.push(`Appointment booked for ${patient}`);
+getLogs(){
+return this.get().logs.slice(-10).reverse()
+},
 
-    this.set(db);
-  },
+reset(){
+localStorage.removeItem("medex_db")
+this.init()
+}
 
-    
-  getAppointments(){
-    return this.get().appointments;
-  },
+}
 
-  reset(){
-    localStorage.removeItem("medex_db");
-    this.init();
-  }
-
-};
-
-
-DB.init();
+DB.init()
