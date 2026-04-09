@@ -1,11 +1,15 @@
 const PASSWORD="1234"
 
 function login(){
-if(password.value===PASSWORD){
-login.style.display="none"
-app.classList.remove("hidden")
+const input=document.getElementById("password").value
+
+if(input===PASSWORD){
+document.getElementById("login").style.display="none"
+document.getElementById("app").classList.remove("hidden")
 nav("dashboard")
-}else alert("Wrong Access Key")
+}else{
+alert("Wrong Access Key")
+}
 }
 
 function nav(id){
