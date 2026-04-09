@@ -7,21 +7,23 @@
 <title>Medex GodMode</title>
 
 <link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
 <!-- INTRO -->
-<div id="intro">MEDEX GOD MODE</div>
+<div id="intro">⚡ MEDEX GOD MODE ⚡</div>
 
 <!-- LOGIN -->
 <div id="login">
   <div class="glass login-box">
     <h1>Medex</h1>
-    <input type="password" id="password" placeholder="Enter Access Key">
-    <button onclick="login()">ENTER</button>
+    <input type="password" id="password" placeholder="Enter Secure Key">
+    <button onclick="login()">Unlock System</button>
   </div>
 </div>
 
@@ -33,6 +35,8 @@
   <h2>Medex</h2>
   <button onclick="nav('dashboard')">Dashboard</button>
   <button onclick="nav('patients')">Patients</button>
+  <button onclick="nav('doctors')">Doctors</button>
+  <button onclick="nav('appointments')">Appointments</button>
   <button onclick="nav('ai')">AI</button>
 </div>
 
@@ -42,8 +46,7 @@
 <header>
   <h2 id="title">Dashboard</h2>
 
-  <div class="menu">
-    ⋮
+  <div class="menu">⋮
     <div class="dropdown">
       <p onclick="resetSystem()">Reset System</p>
     </div>
@@ -53,18 +56,36 @@
 <!-- DASHBOARD -->
 <section id="dashboard" class="panel hidden">
   <div class="cards">
-    <div class="card" id="statPatients"></div>
-    <div class="card" id="statAppointments"></div>
+    <div class="card glow" id="statPatients"></div>
+    <div class="card glow" id="statDoctors"></div>
+    <div class="card glow" id="statAppointments"></div>
   </div>
+
   <canvas id="chart"></canvas>
 </section>
 
-<!-- PATIENTS -->
+<!-- PATIENT -->
 <section id="patients" class="panel hidden">
-  <input id="pname" placeholder="Name">
+  <input id="pname" placeholder="Patient Name">
   <input id="page" placeholder="Age">
   <button onclick="addPatient()">Add Patient</button>
   <div id="patientList"></div>
+</section>
+
+<!-- DOCTOR -->
+<section id="doctors" class="panel hidden">
+  <input id="dname" placeholder="Doctor Name">
+  <input id="dspec" placeholder="Specialization">
+  <button onclick="addDoctor()">Add Doctor</button>
+  <div id="doctorList"></div>
+</section>
+
+<!-- APPOINTMENT -->
+<section id="appointments" class="panel hidden">
+  <input id="ap_patient" placeholder="Patient Name">
+  <select id="ap_doctor"></select>
+  <button onclick="addAppointment()">Book Appointment</button>
+  <div id="appointmentList"></div>
 </section>
 
 <!-- AI -->
@@ -79,6 +100,7 @@
 
 <script src="db.js"></script>
 <script src="ai.js"></script>
+<script src="ui.js"></script>
 <script src="app.js"></script>
 
 </body>
