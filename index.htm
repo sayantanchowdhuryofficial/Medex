@@ -1,58 +1,85 @@
 <!DOCTYPE html>
-<div id="login" class="center">
-  <div class="glass login-card">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Medex GodMode</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="intro">MEDEX GOD MODE</div>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="glass login-box">
     <h1>Medex</h1>
-    <input type="password" id="pass" placeholder="Enter Secure Key">
-    <button onclick="login()">Unlock</button>
+    <input type="password" id="password" placeholder="Enter Access Key">
+    <button onclick="login()">ENTER</button>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app" class="hidden">
 
+<!-- SIDEBAR -->
 <div class="sidebar">
   <h2>Medex</h2>
-  <button onclick="show('dashboard')">Dashboard</button>
-  <button onclick="show('patients')">Patients</button>
-  <button onclick="show('bot')">AI Bot</button>
+  <button onclick="nav('dashboard')">Dashboard</button>
+  <button onclick="nav('patients')">Patients</button>
+  <button onclick="nav('ai')">AI</button>
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
 <header>
   <h2 id="title">Dashboard</h2>
+
   <div class="menu">
     ⋮
     <div class="dropdown">
-      <p onclick="clearData()">Clear Data</p>
+      <p onclick="resetSystem()">Reset System</p>
     </div>
   </div>
 </header>
 
-<section id="dashboard" class="glass hidden">
-<div class="cards">
-  <div class="card" id="pcount"></div>
-  <div class="card" id="acount"></div>
-</div>
-<canvas id="chart"></canvas>
+<!-- DASHBOARD -->
+<section id="dashboard" class="panel hidden">
+  <div class="cards">
+    <div class="card" id="statPatients"></div>
+    <div class="card" id="statAppointments"></div>
+  </div>
+  <canvas id="chart"></canvas>
 </section>
 
-<section id="patients" class="glass hidden">
-<input id="pname" placeholder="Name">
-<input id="page" placeholder="Age">
-<button onclick="addPatient()">Add</button>
-<div id="plist"></div>
+<!-- PATIENTS -->
+<section id="patients" class="panel hidden">
+  <input id="pname" placeholder="Name">
+  <input id="page" placeholder="Age">
+  <button onclick="addPatient()">Add Patient</button>
+  <div id="patientList"></div>
 </section>
 
-<section id="bot" class="glass hidden">
-<div id="chat"></div>
-<input id="q" placeholder="Ask Medex AI">
-<button onclick="askBot()">Send</button>
+<!-- AI -->
+<section id="ai" class="panel hidden">
+  <div id="chat"></div>
+  <input id="question" placeholder="Ask Medex AI">
+  <button onclick="askAI()">Send</button>
 </section>
 
 </div>
-
 </div>
 
-<script src="script.js"></script>
+<script src="db.js"></script>
+<script src="ai.js"></script>
+<script src="app.js"></script>
+
 </body>
 </html>
