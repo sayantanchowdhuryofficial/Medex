@@ -3,69 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medex Healthcare</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<title>Medex Final Boss</title>
 
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
 <body>
 
-<div id="intro">💜 MEDEX 💜</div>
+<div id="intro">💜 MEDEX FINAL 💜</div>
 
-<div id="login" class="container">
-  <div class="card">
-    <h2>Secure Login</h2>
-    <input type="password" id="pass" placeholder="Enter Password">
+<div id="login" class="center">
+  <div class="glass">
+    <h2>Secure Access</h2>
+    <input type="password" id="pass" placeholder="Password">
     <button onclick="login()">Enter</button>
   </div>
 </div>
 
 <div id="app" class="hidden">
 
-<nav>
-  <button onclick="showSection('patients')">Patients</button>
-  <button onclick="showSection('doctors')">Doctors</button>
-  <button onclick="showSection('appointments')">Appointments</button>
-  <button onclick="showSection('admin')">Admin</button>
-</nav>
+<div class="sidebar">
+  <h2>Medex</h2>
+  <button onclick="show('dashboard')">Dashboard</button>
+  <button onclick="show('patients')">Patients</button>
+  <button onclick="show('appointments')">Appointments</button>
+  <button onclick="show('bot')">AI Bot</button>
+</div>
 
-<section id="patients" class="card hidden">
+<div class="main">
+
+<section id="dashboard" class="glass hidden">
+<h2>Analytics</h2>
+<canvas id="chart"></canvas>
+</section>
+
+<section id="patients" class="glass hidden">
 <h2>Patients</h2>
 <input id="pname" placeholder="Name">
 <input id="page" placeholder="Age">
-<button onclick="addPatient()">Add</button>
+<button onclick="addPatient()">Add Patient</button>
 <div id="plist"></div>
 </section>
 
-<section id="doctors" class="card hidden">
-<h2>Doctors</h2>
-<input id="dname" placeholder="Doctor Name">
-<button onclick="addDoctor()">Add</button>
-<div id="dlist"></div>
-</section>
-
-<section id="appointments" class="card hidden">
+<section id="appointments" class="glass hidden">
 <h2>Appointments</h2>
-<input id="apname" placeholder="Patient Name">
+<input id="apname" placeholder="Patient">
 <input id="docname" placeholder="Doctor">
 <button onclick="addAppointment()">Book</button>
 <div id="alist"></div>
 </section>
 
-<section id="admin" class="card hidden">
-<h2>Dashboard</h2>
-<div id="stats"></div>
-
-<h3>Search Patient</h3>
-<input id="search" placeholder="Search patient">
-<button onclick="searchPatient()">Search</button>
-<div id="result"></div>
-
-<h3>Prescription</h3>
-<input id="pres" placeholder="Write prescription">
-<button onclick="savePrescription()">Save</button>
+<section id="bot" class="glass hidden">
+<h2>Medex AI Assistant</h2>
+<div id="chat"></div>
+<input id="q" placeholder="Ask something...">
+<button onclick="askBot()">Send</button>
 </section>
 
-<footer>© Medex | By Atulya</footer>
+</div>
+
+<footer>© Medex Final | By Atulya</footer>
 
 </div>
 
